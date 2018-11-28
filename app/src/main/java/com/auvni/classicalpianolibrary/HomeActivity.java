@@ -1,5 +1,7 @@
 package com.auvni.classicalpianolibrary;
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,35 +10,72 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.io.IOException;
 
 public class HomeActivity extends AppCompatActivity {
 
+    String url = "https://www.searchgurbani.com/audio/sggs/1.mp3";
+    MediaPlayer player;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-
+        setContentView(R.layout.activity_audio_player);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
+    public void setThisURL(String setUrl) {
+        this.url = setUrl;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    /**
+     * This method is called when a user clicks the play button.
+     * @param v xml file button
+     */
+    public void play(View v) {
+        if (player == null) {
+            try {
+                player = new MediaPlayer();
+                player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                player.setDataSource(url);
+                player.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Input does not exist", Toast.LENGTH_SHORT).show();
+            }
         }
+        player.start();
+    }
 
-        return super.onOptionsItemSelected(item);
+    /**
+     * This method is called when a user clicks the pause button.
+     * @param v xml file button
+     */
+    public void pause(View v) {
+        if (player != null) {
+            player.pause();
+        }
+    }
+
+    /**
+     * This method is called when a user want to stop the song all together.
+     * @param v xml file button
+     */
+    public void stop(View v) {
+        stopPlayer();
+    }
+
+    public void stopPlayer() {
+        if (player != null) {
+            player.release();
+            player = null;
+            Toast.makeText(this, "MediaPlayer has been released", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        stopPlayer();
     }
 }

@@ -12,7 +12,7 @@ import java.net.URI;
 
 public class AudioPlayerActivity extends AppCompatActivity {
 
-    String url = "https://www.searchgurbani.com/audio/sggs/1.mp3";
+    String url;
     MediaPlayer player;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,9 +20,9 @@ public class AudioPlayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_audio_player);
     }
 
-    /*public void setThisURL(String url) {
-
-    }*/
+    public void setThisURL(String setUrl) {
+        this.url = setUrl;
+    }
 
     /**
      * This method is called when a user clicks the play button.
