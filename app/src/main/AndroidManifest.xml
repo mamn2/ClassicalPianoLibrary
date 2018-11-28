@@ -22,10 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AudioPlayerActivity" />
-        <activity
-            android:name=".SearchResultsActivity"
-            android:label="@string/title_activity_search_results"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".SearchResultsActivity"></activity>
     </application>
 
 </manifest>
