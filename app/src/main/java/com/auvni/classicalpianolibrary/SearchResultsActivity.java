@@ -6,8 +6,13 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SearchResultsActivity extends AppCompatActivity {
@@ -25,10 +30,47 @@ public class SearchResultsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_results);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         seekbar = (SeekBar) findViewById(R.id.seekBar);
+
+        TrackInfo track = new TrackInfo("Girls Like You", "Maroon 5", "https://fullgaana.in/siteuploads/files/sfd10/4966/Maroon%205%20-%20Girls%20Like%20You%20(feat.%20Cardi%20B)(FullGaana.In).mp3");
+        trackInfoArrayList.add(track);
+
+        TrackInfo track2 = new TrackInfo("Faded", "Alan Walker", "https://fullgaana.in/siteuploads/files/sfd6/2895/Faded%20(Alan%20Walker)(FullGaana.In).mp3");
+        trackInfoArrayList.add(track2);
+
         songRecyclerListAdapter = new SongRecyclerListAdapter(this, trackInfoArrayList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(songRecyclerListAdapter);
+
+        songRecyclerListAdapter.setItemClickListener(new SongRecyclerListAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
+                try {
+                    if (b.getText().toString().equals("Pause")) {
+                        b.setText("Play");
+                        mp.pause();
+                    } else {
+                        mp = new MediaPlayer();
+                        mp.setDataSource(inf.getUrl());
+                        mp.prepareAsync();
+                        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mp) {
+                                mp.start();
+                                b.setText("Pause");
+                            }
+                        });
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mp = new MediaPlayer();
     }
+
+
 }

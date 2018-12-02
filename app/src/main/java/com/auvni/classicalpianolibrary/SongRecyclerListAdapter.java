@@ -41,8 +41,8 @@ public class SongRecyclerListAdapter extends RecyclerView.Adapter<SongRecyclerLi
     @Override
     public void onBindViewHolder(final TrackHolder trackHolder, final int i) {
         final TrackInfo trackerInfo = trackInfoArrayList.get(i);
-        trackHolder.songName.setText(trackerInfo.songName);
-        trackHolder.artistName.setText(trackerInfo.artistName);
+        trackHolder.songName.setText(trackerInfo.getSongName());
+        trackHolder.artistName.setText(trackerInfo.getArtistName());
         trackHolder.mediaPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
