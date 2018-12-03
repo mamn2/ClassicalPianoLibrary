@@ -24,4 +24,21 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    /*
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    private void connected() {
+
+    }
+
+
+    protected void onStop() {
+        super.onStop();
+    }
+*/
+
+
 }

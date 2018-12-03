@@ -33,5 +33,6 @@ dependencies {
     //Circle View Dependency (Allows Song Cover To Be Viewed As Circle View
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-
+    implementation project(':spotify-app-remote')
+    implementation "com.google.code.gson:gson:2.8.5"
 }
