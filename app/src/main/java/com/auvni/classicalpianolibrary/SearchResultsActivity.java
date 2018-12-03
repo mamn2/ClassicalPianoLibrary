@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,11 +16,11 @@ import java.util.ArrayList;
 public class SearchResultsActivity extends AppCompatActivity {
 
 
-    private ArrayList<TrackInfo> trackInfoArrayList = new ArrayList<TrackInfo>();
+    private ArrayList<TrackInfo> trackInfoArrayList = new ArrayList<>();
     RecyclerView recyclerView;
     SeekBar seekbar;
     SongRecyclerListAdapter songRecyclerListAdapter;
-    MediaPlayer mp;
+    MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,29 +45,52 @@ public class SearchResultsActivity extends AppCompatActivity {
         songRecyclerListAdapter.setItemClickListener(new SongRecyclerListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
-                try {
-                    if (b.getText().toString().equals("Pause")) {
-                        b.setText("Play");
-                        mp.pause();
-                    } else {
-                        mp = new MediaPlayer();
-                        mp.setDataSource(inf.getUrl());
-                        mp.prepareAsync();
-                        mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                            @Override
-                            public void onPrepared(MediaPlayer mp) {
-                                mp.start();
-                                b.setText("Pause");
-                            }
-                        });
+
+                if (b.getText().toString().equals("Stop")) {
+                    if (player != null) {
+                        player.stop();
+                        player.reset();
+                        player.release();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    b.setText("Play");
+                    player = null;
+                } else if (player != null) {
+                    player.stop();
+                    player.reset();
+                    player.release();
+                    player = null;
+                    setUpMediaPlayer(inf.getUrl(), b);
+                } else {
+                    setUpMediaPlayer(inf.getUrl(), b);
                 }
+
             }
         });
+    }
 
-        mp = new MediaPlayer();
+    public void setUpMediaPlayer(String url, final Button b) {
+        try {
+            player = new MediaPlayer();
+            player.setDataSource(url);
+            player.prepareAsync();
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                    b.setText("Stop");
+                }
+            });
+            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mp.release();
+                    b.setText("Play");
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
