@@ -25,7 +25,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     SeekBar seekbar;
     SongRecyclerListAdapter songRecyclerListAdapter;
-    MediaPlayer player;
+    static MediaPlayer player;
     ImageButton fullScreen;
 
     @Override
@@ -112,6 +112,11 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
 
     }
+
+    public static MediaPlayer getPlayer() {
+        return player;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
