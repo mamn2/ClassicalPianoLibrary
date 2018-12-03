@@ -30,7 +30,7 @@ public class AudioPlayerActivity extends SearchResultsActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
-            this.finish();
+            onStop();
         }
 
         return super.onOptionsItemSelected(item);
@@ -41,22 +41,12 @@ public class AudioPlayerActivity extends SearchResultsActivity {
      * @param v xml file button
      */
     public void play(View v) {
-        songRecyclerListAdapter.setItemClickListener(new SongRecyclerListAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
+        if (player == null) {
+            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
+            this.finish();
+        }
 
-                if (player != null) {
-                    player.stop();
-                    player.reset();
-                    player.release();
-                    player = null;
-                    setUpMediaPlayer(inf.getUrl(), b);
-                } else {
-                    player.start();
-                }
-
-            }
-        });
+        player.start();
     }
 
     /**
@@ -64,16 +54,9 @@ public class AudioPlayerActivity extends SearchResultsActivity {
      * @param v xml file button
      */
     public void pause(View v) {
-        songRecyclerListAdapter.setItemClickListener(new SongRecyclerListAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
-
-                if (player != null) {
-                    player.pause();
-                }
-
-            }
-        });
+        if (player != null) {
+            player.pause();
+        }
     }
 
     /**
@@ -81,10 +64,6 @@ public class AudioPlayerActivity extends SearchResultsActivity {
      * @param v xml file button
      */
     public void stop(View v) {
-        stopPlayer();
-    }
-
-    public void stopPlayer() {
         if (player != null) {
             player.release();
             player = null;
@@ -92,9 +71,14 @@ public class AudioPlayerActivity extends SearchResultsActivity {
         }
     }
 
+
     @Override
     public void onStop() {
+        if (player != null) {
+            player.stop();
+            player.release();
+            player = null;
+        }
         super.onStop();
-        stopPlayer();
     }
 }
