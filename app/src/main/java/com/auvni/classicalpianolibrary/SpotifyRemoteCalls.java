@@ -10,18 +10,12 @@ import com.spotify.protocol.types.PlayerState;
 import com.spotify.protocol.types.Track;
 
 
-public class SpotifyRemoteCalls {
+public interface SpotifyRemoteCalls {
 
-    private static final String CLIENT_ID = "9ae5066bba254f168f61e7229a7a1e3a";
-    private static final String REDIRECT_URI = "com.auvni.classicalpianolibrary://callback";
-    private SpotifyAppRemote mSpotifyAppRemote;
+    public static final String CLIENT_ID = "9ae5066bba254f168f61e7229a7a1e3a";
+    public static final String REDIRECT_URI = "http://localhost:8888/callback/";
 
-    ConnectionParams connectionParams =
-            new ConnectionParams.Builder(CLIENT_ID)
-                    .setRedirectUri(REDIRECT_URI)
-                    .showAuthView(true)
-                    .build();
-
+    public static final int REQUEST_CODE = 1337;
 
 
 }

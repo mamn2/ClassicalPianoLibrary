@@ -12,13 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.PlayerApi;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
-public class SearchResultsActivity extends AppCompatActivity {
+public class SearchResultsActivity extends AppCompatActivity implements SpotifyRemoteCalls {
 
-
+    private SpotifyAppRemote mSpotifyAppRemote;
     private ArrayList<TrackInfo> trackInfoArrayList = new ArrayList<>();
     RecyclerView recyclerView;
     SeekBar seekbar;
@@ -120,7 +128,52 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         TrackInfo track2 = new TrackInfo("Faded", "Alan Walker", "https://fullgaana.in/siteuploads/files/sfd6/2895/Faded%20(Alan%20Walker)(FullGaana.In).mp3");
         trackInfoArrayList.add(track2);
+
+
+
+        AuthenticationRequest.Builder builder =
+                new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
+
+        builder.setScopes(new String[]{"streaming"});
+        AuthenticationRequest request = builder.build();
+
+        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+        ConnectionParams connectionParams =
+                new ConnectionParams.Builder(CLIENT_ID)
+                        .setRedirectUri(REDIRECT_URI)
+                        .showAuthView(true)
+                        .build();
+        SpotifyAppRemote.connect(this, connectionParams,
+                new Connector.ConnectionListener() {
+                    @Override
+                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                        mSpotifyAppRemote = spotifyAppRemote;
+                        connected();
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+
+                    }
+                });
     }
+
+    private void connected() {
+        PlayerApi player = mSpotifyAppRemote.getPlayerApi();
+        player.play("spotify:track:7lEptt4wbM0yJTvSG5EBof");
+        try {
+            TimeUnit.SECONDS.sleep(20);
+        } catch (Exception e) {
+
+        }
+
+        player.pause();
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+
+    }
+
+
 
 
 }
