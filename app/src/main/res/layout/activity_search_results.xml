@@ -9,11 +9,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <ImageButton
+        android:id="@+id/fullScreenButton"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:background="@drawable/ic_action_name"
+        android:visibility="invisible"/>
+
+
+
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_weight="0"
         style="@style/Widget.AppCompat.SeekBar.Discrete"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="50dp"
+        />
+
+
 
 </LinearLayout>
