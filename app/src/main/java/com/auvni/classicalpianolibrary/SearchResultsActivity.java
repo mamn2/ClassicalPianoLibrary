@@ -1,6 +1,7 @@
 package com.auvni.classicalpianolibrary;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
@@ -31,7 +33,8 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
     RecyclerView recyclerView;
     SeekBar seekbar;
     SongRecyclerListAdapter songRecyclerListAdapter;
-    MediaPlayer player;
+    static MediaPlayer player;
+    ImageButton fullScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         seekbar = (SeekBar) findViewById(R.id.seekBar);
+        fullScreen = (ImageButton) findViewById(R.id.fullScreenButton);
 
         loadTracks();
 
@@ -62,6 +66,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                         player.stop();
                         player.reset();
                         player.release();
+                        fullScreen.setVisibility(View.INVISIBLE);
                     }
                     b.setText("Play");
                     player = null;
@@ -77,6 +82,14 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
             }
         });
+
+        fullScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SearchResultsActivity.this, AudioPlayerActivity.class));
+            }
+        });
+
     }
 
 
@@ -98,13 +111,20 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                 public void onCompletion(MediaPlayer mp) {
                     mp.release();
                     b.setText("Play");
+                    fullScreen.setVisibility(View.INVISIBLE);
                 }
             });
+            fullScreen.setVisibility(View.VISIBLE);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
+
+    public static MediaPlayer getPlayer() {
+        return player;
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
