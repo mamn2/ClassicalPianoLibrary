@@ -1,6 +1,7 @@
 package com.auvni.classicalpianolibrary;
 
 import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 

@@ -33,11 +33,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         seekbar = (SeekBar) findViewById(R.id.seekBar);
 
-        TrackInfo track = new TrackInfo("Girls Like You", "Maroon 5", "https://fullgaana.in/siteuploads/files/sfd10/4966/Maroon%205%20-%20Girls%20Like%20You%20(feat.%20Cardi%20B)(FullGaana.In).mp3");
-        trackInfoArrayList.add(track);
-
-        TrackInfo track2 = new TrackInfo("Faded", "Alan Walker", "https://fullgaana.in/siteuploads/files/sfd6/2895/Faded%20(Alan%20Walker)(FullGaana.In).mp3");
-        trackInfoArrayList.add(track2);
+        loadTracks();
 
         songRecyclerListAdapter = new SongRecyclerListAdapter(this, trackInfoArrayList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -107,10 +103,23 @@ public class SearchResultsActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == android.R.id.home) {
+            if (player != null) {
+                player.stop();
+                player.reset();
+                player.release();
+            }
             this.finish();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadTracks() {
+        TrackInfo track = new TrackInfo("Girls Like You", "Maroon 5", "https://fullgaana.in/siteuploads/files/sfd10/4966/Maroon%205%20-%20Girls%20Like%20You%20(feat.%20Cardi%20B)(FullGaana.In).mp3");
+        trackInfoArrayList.add(track);
+
+        TrackInfo track2 = new TrackInfo("Faded", "Alan Walker", "https://fullgaana.in/siteuploads/files/sfd6/2895/Faded%20(Alan%20Walker)(FullGaana.In).mp3");
+        trackInfoArrayList.add(track2);
     }
 
 
