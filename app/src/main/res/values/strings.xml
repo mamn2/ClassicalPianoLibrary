@@ -6,4 +6,5 @@
     <string name="piece_name">Enter a piece</string>
     <string name="invalid_url">The URL for this MP3 is invalid</string>
     <string name="client_id">9ae5066bba254f168f61e7229a7a1e3a</string>
+    <string name="no_results">No results\nPlease Search Again</string>
 </resources>
