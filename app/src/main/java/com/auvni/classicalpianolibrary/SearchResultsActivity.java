@@ -195,6 +195,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                     @Override
                     public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                         mSpotifyAppRemote = spotifyAppRemote;
+                        Toast.makeText(SearchResultsActivity.this, "Connected", Toast.LENGTH_SHORT);
                         connected();
                     }
 
@@ -207,15 +208,19 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     private void connected() {
         PlayerApi player = mSpotifyAppRemote.getPlayerApi();
-        player.play("spotify:track:7lEptt4wbM0yJTvSG5EBof");
         try {
+            player.play("spotify:track:7lEptt4wbM0yJTvSG5EBof");
+        } catch (Exception e) {
+            Toast.makeText(this, "Not working", Toast.LENGTH_SHORT).show();
+        }
+        /*try {
             TimeUnit.SECONDS.sleep(20);
         } catch (Exception e) {
 
-        }
+        }*/
 
-        player.pause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+        //player.pause();
+        //SpotifyAppRemote.disconnect(mSpotifyAppRemote);
 
     }
 
