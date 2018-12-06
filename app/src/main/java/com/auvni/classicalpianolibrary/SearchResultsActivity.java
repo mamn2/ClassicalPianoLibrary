@@ -207,15 +207,16 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     private void connected() {
         PlayerApi player = mSpotifyAppRemote.getPlayerApi();
-        player.play("spotify:track:7lEptt4wbM0yJTvSG5EBof");
+        player.play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL");
+        /*
         try {
             TimeUnit.SECONDS.sleep(20);
         } catch (Exception e) {
 
         }
-
-        player.pause();
-        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+*/
+        //player.pause();
+        //SpotifyAppRemote.disconnect(mSpotifyAppRemote);
 
     }
 
