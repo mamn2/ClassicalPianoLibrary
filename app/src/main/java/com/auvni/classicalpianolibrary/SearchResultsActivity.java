@@ -22,6 +22,8 @@ import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.client.Subscription;
+import com.spotify.protocol.types.PlayerState;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
@@ -32,15 +34,15 @@ import java.util.concurrent.TimeUnit;
 
 public class SearchResultsActivity extends AppCompatActivity implements SpotifyRemoteCalls {
 
-    private SpotifyAppRemote mSpotifyAppRemote;
+    private static SpotifyAppRemote mSpotifyAppRemote;
     private ArrayList<TrackInfo> trackInfoArrayList = new ArrayList<>();
     RecyclerView recyclerView;
     SeekBar seekbar;
+    Subscription<PlayerState> mPlayerStateSubscription;
     SongRecyclerListAdapter songRecyclerListAdapter;
     static MediaPlayer player;
     ImageButton fullScreen;
     String getSongName;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         seekbar = (SeekBar) findViewById(R.id.seekBar);
         fullScreen = (ImageButton) findViewById(R.id.fullScreenButton);
-        loadSpotify();
+        //loadSpotify();
         loadAll();
         search(getSongName);
 
@@ -66,7 +68,8 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        subscribeToPlayerState();
+        connect(true);
         songRecyclerListAdapter.setItemClickListener(new SongRecyclerListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
@@ -85,9 +88,9 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                     player.reset();
                     player.release();
                     player = null;
-                    setUpMediaPlayer(inf.getUrl(), b);
+                    onPlayClicked();
                 } else {
-                    setUpMediaPlayer(inf.getUrl(), b);
+                    onPlayClicked();
                 }
 
             }
@@ -177,6 +180,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     private void loadSpotify() {
 
+
         AuthenticationRequest.Builder builder =
                 new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
 
@@ -207,12 +211,9 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
     }
 
     private void connected() {
-        PlayerApi player = mSpotifyAppRemote.getPlayerApi();
-        try {
-            player.play("spotify:track:7lEptt4wbM0yJTvSG5EBof");
-        } catch (Exception e) {
-            Toast.makeText(this, "Not working", Toast.LENGTH_SHORT).show();
-        }
+        mSpotifyAppRemote.getPlayerApi()
+                .play("spotify:track:7lEptt4wbM0yJTvSG5EBof");
+
         /*try {
             TimeUnit.SECONDS.sleep(20);
         } catch (Exception e) {
@@ -224,6 +225,51 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     }
 
+    private void connect (boolean showAuthView) {
+
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+
+        SpotifyAppRemote.connect(
+                getApplication(),
+                new ConnectionParams.Builder(CLIENT_ID)
+                        .setRedirectUri(REDIRECT_URI)
+                        .showAuthView(showAuthView)
+                        .build(),
+                new Connector.ConnectionListener() {
+                    @Override
+                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                        mSpotifyAppRemote = spotifyAppRemote;
+                    }
+
+                    @Override
+                    public void onFailure(Throwable error) {
+                        Toast.makeText(SearchResultsActivity.this, "Connected", Toast.LENGTH_SHORT);
+                    }
+                });
+
+
+    }
+
+    public void subscribeToPlayerState() {
+
+        if (mPlayerStateSubscription != null && !mPlayerStateSubscription.isCanceled()) {
+            mPlayerStateSubscription.cancel();
+            mPlayerStateSubscription = null;
+        }
+
+
+
+
+    }
+
+    public void onPlayClicked() {
+        playUri("spotify:track:5UIV0Vy9Ui1IrK1jT5mMwl");
+    }
+
+    private void playUri(String uri) {
+        mSpotifyAppRemote.getPlayerApi()
+                .play(uri);
+    }
 
 
 
