@@ -104,7 +104,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                     b.setText("Play");
                     subscribeToPlayerState();
                 } else {
-                    onPlayClicked();;
+                    onPlayClicked();
                     subscribeToPlayerState();
                     b.setText("Stop");
                 }
@@ -260,7 +260,8 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
                     @Override
                     public void onFailure(Throwable error) {
-                        Toast.makeText(SearchResultsActivity.this, "Connected", Toast.LENGTH_SHORT);
+                        Toast.makeText(SearchResultsActivity.this, "Not Connected", Toast.LENGTH_SHORT).show();
+                        connect(true);
                     }
                 });
 
