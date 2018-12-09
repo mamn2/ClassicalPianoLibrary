@@ -22,13 +22,17 @@ import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.PlayerApi;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.client.CallResult;
+import com.spotify.protocol.client.Result;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
 import com.spotify.sdk.android.authentication.AuthenticationResponse;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -43,6 +47,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
     static MediaPlayer player;
     ImageButton fullScreen;
     String getSongName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +73,11 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        subscribeToPlayerState();
         connect(true);
         songRecyclerListAdapter.setItemClickListener(new SongRecyclerListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
-
+                /*
                 if (b.getText().toString().equals("Stop")) {
                     if (player != null) {
                         player.stop();
@@ -83,15 +87,29 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                     }
                     b.setText("Play");
                     player = null;
-                } else if (player != null) {
-                    player.stop();
-                    player.reset();
-                    player.release();
-                    player = null;
+                } else if (b.callOnClick()) {
                     onPlayClicked();
+                    b.setText("Stop");
                 } else {
                     onPlayClicked();
                 }
+                */
+
+                if (checkPlayerPaused()) {
+                    pausePlay();
+                    subscribeToPlayerState();
+                    b.setText("Play");
+                } else if (b.getText().toString().equals("Stop")) {
+                    pausePlay();
+                    b.setText("Play");
+                    subscribeToPlayerState();
+                } else {
+                    onPlayClicked();;
+                    subscribeToPlayerState();
+                    b.setText("Stop");
+                }
+
+
 
             }
         });
@@ -104,7 +122,6 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
         });
 
     }
-
 
 
     public void setUpMediaPlayer(String url, final Button b) {
@@ -225,7 +242,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     }
 
-    private void connect (boolean showAuthView) {
+    private void connect(boolean showAuthView) {
 
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
 
@@ -252,12 +269,8 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     public void subscribeToPlayerState() {
 
-        if (mPlayerStateSubscription != null && !mPlayerStateSubscription.isCanceled()) {
-            mPlayerStateSubscription.cancel();
-            mPlayerStateSubscription = null;
-        }
-
-
+        mSpotifyAppRemote.getPlayerApi()
+                .subscribeToPlayerState();
 
 
     }
@@ -271,6 +284,25 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                 .play(uri);
     }
 
+    private void pausePlay() {
 
+        if (checkPlayerPaused()) {
+            mSpotifyAppRemote.getPlayerApi().resume();
+        } else {
+            mSpotifyAppRemote.getPlayerApi().pause();
+        }
 
+    }
+
+    private boolean checkPlayerPaused() {
+        CallResult<PlayerState> playerStateCall = mSpotifyAppRemote.getPlayerApi().getPlayerState();
+        Result<PlayerState> playerStateResult = playerStateCall.await(10, TimeUnit.MICROSECONDS);
+        if (playerStateResult.isSuccessful()) {
+            if (playerStateResult.getData().isPaused) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
