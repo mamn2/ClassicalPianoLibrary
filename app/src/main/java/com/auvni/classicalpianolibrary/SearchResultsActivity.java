@@ -93,7 +93,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                     subscribeToPlayerState();
                     fullScreen.setVisibility(View.INVISIBLE);
                 } else {
-                    onPlayClicked();
+                    playUri(inf.getUrl());
                     subscribeToPlayerState();
                     b.setText("Stop");
                     fullScreen.setVisibility(View.VISIBLE);
@@ -133,7 +133,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
     private void search(String song) {
         boolean found = false;
         for (int i = 0; i < trackInfoArrayList.size(); i++) {
-            if (trackInfoArrayList.get(i).getSongName().equals(song)) {
+            if (trackInfoArrayList.get(i).getSongName().contains(song)) {
                 TrackInfo info = trackInfoArrayList.get(i);
                 trackInfoArrayList = new ArrayList<>();
                 trackInfoArrayList.add(info);
@@ -149,7 +149,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
         TrackInfo track = new TrackInfo("Polonaise in B-flat Minor, Op. 21", "Alexander Scriabin, Halida Dinova", "spotify:track:5UIV0Vy9Ui1IrK1jT5mMwl");
         trackInfoArrayList.add(track);
 
-        TrackInfo track2 = new TrackInfo("Piano Concerto No. 2 in C minor, Op. 18 No. 1", "Sergei Rachmaninov", "https://fullgaana.in/siteuploads/files/sfd6/2895/Faded%20(Alan%20Walker)(FullGaana.In).mp3");
+        TrackInfo track2 = new TrackInfo("Nocturne in E Flat Major", "Frederic Chopin", "spotify:track:7yMSBYlmVEZYZS6V1SLrth");
         trackInfoArrayList.add(track2);
     }
 
@@ -185,10 +185,6 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                 .subscribeToPlayerState();
 
 
-    }
-
-    public void onPlayClicked() {
-        playUri("spotify:track:5UIV0Vy9Ui1IrK1jT5mMwl");
     }
 
     private void playUri(String uri) {
