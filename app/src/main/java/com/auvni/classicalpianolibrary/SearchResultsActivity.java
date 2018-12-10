@@ -2,6 +2,7 @@ package com.auvni.classicalpianolibrary;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import com.spotify.protocol.client.CallResult;
 import com.spotify.protocol.client.Result;
 import com.spotify.protocol.client.Subscription;
 import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.ImageUri;
 import com.spotify.protocol.types.Track;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
 import com.spotify.sdk.android.authentication.AuthenticationRequest;
@@ -40,6 +42,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     protected static SpotifyAppRemote mSpotifyAppRemote;
     private ArrayList<TrackInfo> trackInfoArrayList = new ArrayList<>();
+    private ArrayList<TrackInfo> newTrackInfoArrayList = new ArrayList<>();
     RecyclerView recyclerView;
     SeekBar seekbar;
     Subscription<PlayerState> mPlayerStateSubscription;
@@ -60,11 +63,10 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         seekbar = (SeekBar) findViewById(R.id.seekBar);
         fullScreen = (ImageButton) findViewById(R.id.fullScreenButton);
-        //loadSpotify();
-        loadAll();
+        trackInfoArrayList = LoadTracks.loadTracks();
         search(getSongName);
 
-        songRecyclerListAdapter = new SongRecyclerListAdapter(this, trackInfoArrayList);
+        songRecyclerListAdapter = new SongRecyclerListAdapter(this, newTrackInfoArrayList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(), linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
@@ -132,12 +134,20 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     private void search(String song) {
         boolean found = false;
+        newTrackInfoArrayList = new ArrayList<>();
         for (int i = 0; i < trackInfoArrayList.size(); i++) {
-            if (trackInfoArrayList.get(i).getSongName().contains(song)) {
-                TrackInfo info = trackInfoArrayList.get(i);
-                trackInfoArrayList = new ArrayList<>();
-                trackInfoArrayList.add(info);
-                found = true;
+            try {
+                if (trackInfoArrayList.get(i).getSongName().contains(song)) {
+                    TrackInfo info = trackInfoArrayList.get(i);
+                    newTrackInfoArrayList.add(info);
+                    found = true;
+                } else if (trackInfoArrayList.get(i).getArtistName().contains(song)) {
+                    TrackInfo info = trackInfoArrayList.get(i);
+                    newTrackInfoArrayList.add(info);
+                    found = true;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         if (!found) {
@@ -145,12 +155,18 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
         }
     }
 
-    private void loadAll() {
+    /*private void loadAll() {
         TrackInfo track = new TrackInfo("Polonaise in B-flat Minor, Op. 21", "Alexander Scriabin, Halida Dinova", "spotify:track:5UIV0Vy9Ui1IrK1jT5mMwl");
         trackInfoArrayList.add(track);
 
         TrackInfo track2 = new TrackInfo("Nocturne in E Flat Major", "Frederic Chopin", "spotify:track:7yMSBYlmVEZYZS6V1SLrth");
         trackInfoArrayList.add(track2);
+    }*/
+
+    protected CallResult<Bitmap> imageConnection(String URI) {
+        connect(true);
+        ImageUri imageGetter = new ImageUri(URI);
+        return mSpotifyAppRemote.getImagesApi().getImage(imageGetter);
     }
 
     private void connect(boolean showAuthView) {

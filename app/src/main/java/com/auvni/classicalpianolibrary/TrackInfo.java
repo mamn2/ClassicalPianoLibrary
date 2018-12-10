@@ -1,12 +1,20 @@
 package com.auvni.classicalpianolibrary;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.telecom.Call;
 import android.widget.ImageView;
 
-public class TrackInfo {
+import com.spotify.protocol.client.CallResult;
+import com.spotify.protocol.client.Result;
+
+import java.util.concurrent.TimeUnit;
+
+public class TrackInfo extends SearchResultsActivity {
     private String songName;
     private String artistName;
     private String url;
-    private ImageView coverArt;
+    private Bitmap coverArt;
 
     public TrackInfo() {
 
@@ -22,7 +30,7 @@ public class TrackInfo {
 
     }
 
-    public TrackInfo(String songName, String artistName, String url, ImageView coverArt) {
+    public TrackInfo(String songName, String artistName, String url, Bitmap coverArt) {
         this.songName = songName;
         this.artistName = artistName;
         this.url = url;
@@ -41,7 +49,13 @@ public class TrackInfo {
         return url;
     }
 
-    public ImageView getCoverArt() {
+    public Bitmap getCoverArt() {
+        CallResult<Bitmap> bitmap = imageConnection(url);
+        Result<Bitmap>  bitmapResult = bitmap.await(10, TimeUnit.SECONDS);
+        if (bitmapResult.isSuccessful()) {
+            coverArt = bitmapResult.getData();
+        }
+
         return coverArt;
     }
 }

@@ -20,8 +20,8 @@ public class AudioPlayerActivity extends SearchResultsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
 
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 

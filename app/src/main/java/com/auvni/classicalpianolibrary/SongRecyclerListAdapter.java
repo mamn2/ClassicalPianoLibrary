@@ -9,7 +9,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+
 import java.util.ArrayList;
+
+import kaaes.spotify.webapi.android.SpotifyService;
 
 public class SongRecyclerListAdapter extends RecyclerView.Adapter<SongRecyclerListAdapter.TrackHolder> {
 
@@ -43,6 +47,7 @@ public class SongRecyclerListAdapter extends RecyclerView.Adapter<SongRecyclerLi
         final TrackInfo trackerInfo = trackInfoArrayList.get(i);
         trackHolder.songName.setText(trackerInfo.getSongName());
         trackHolder.artistName.setText(trackerInfo.getArtistName());
+        //trackHolder.coverArt.setImageBitmap(trackerInfo.getCoverArt());
         trackHolder.mediaPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
