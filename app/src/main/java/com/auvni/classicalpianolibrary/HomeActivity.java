@@ -28,11 +28,18 @@ public class HomeActivity extends AppCompatActivity {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, SearchResultsActivity.class);
-                EditText text = (EditText) HomeActivity.this.findViewById(R.id.editText);
-                songNames = text.getText().toString();
-                intent.putExtra("key", songNames);
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(HomeActivity.this, SearchResultsActivity.class);
+                    EditText text = (EditText) HomeActivity.this.findViewById(R.id.editText);
+                    songNames = text.getText().toString();
+                    intent.putExtra("key", songNames);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(HomeActivity.this, "Exception", Toast.LENGTH_SHORT).show();
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
             }
         });
     }

@@ -73,40 +73,31 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        connect(true);
+        try {
+            connect(true);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
         songRecyclerListAdapter.setItemClickListener(new SongRecyclerListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
-                /*
-                if (b.getText().toString().equals("Stop")) {
-                    if (player != null) {
-                        player.stop();
-                        player.reset();
-                        player.release();
-                        fullScreen.setVisibility(View.INVISIBLE);
-                    }
-                    b.setText("Play");
-                    player = null;
-                } else if (b.callOnClick()) {
-                    onPlayClicked();
-                    b.setText("Stop");
-                } else {
-                    onPlayClicked();
-                }
-                */
+
 
                 if (checkPlayerPaused()) {
                     pausePlay();
                     subscribeToPlayerState();
                     b.setText("Play");
+                    fullScreen.setVisibility(View.INVISIBLE);
                 } else if (b.getText().toString().equals("Stop")) {
                     pausePlay();
                     b.setText("Play");
                     subscribeToPlayerState();
+                    fullScreen.setVisibility(View.INVISIBLE);
                 } else {
                     onPlayClicked();
                     subscribeToPlayerState();
                     b.setText("Stop");
+                    fullScreen.setVisibility(View.VISIBLE);
                 }
 
 
