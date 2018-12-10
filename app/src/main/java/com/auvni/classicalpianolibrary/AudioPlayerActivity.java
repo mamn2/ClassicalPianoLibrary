@@ -41,12 +41,7 @@ public class AudioPlayerActivity extends SearchResultsActivity {
      * @param v xml file button
      */
     public void play(View v) {
-        if (player == null) {
-            Toast.makeText(this, "Please select a song", Toast.LENGTH_SHORT).show();
-            this.finish();
-        }
-
-        player.start();
+        mSpotifyAppRemote.getPlayerApi().resume();
     }
 
     /**
@@ -54,9 +49,7 @@ public class AudioPlayerActivity extends SearchResultsActivity {
      * @param v xml file button
      */
     public void pause(View v) {
-        if (player != null) {
-            player.pause();
-        }
+        mSpotifyAppRemote.getPlayerApi().pause();
     }
 
     /**
@@ -64,11 +57,8 @@ public class AudioPlayerActivity extends SearchResultsActivity {
      * @param v xml file button
      */
     public void stop(View v) {
-        if (player != null) {
-            player.release();
-            player = null;
-            Toast.makeText(this, "MediaPlayer has been released", Toast.LENGTH_SHORT).show();
-        }
+        pausePlay();
+        subscribeToPlayerState();
     }
 
 

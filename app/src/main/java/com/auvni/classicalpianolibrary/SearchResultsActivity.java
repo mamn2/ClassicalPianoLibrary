@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SearchResultsActivity extends AppCompatActivity implements SpotifyRemoteCalls {
 
-    private static SpotifyAppRemote mSpotifyAppRemote;
+    protected static SpotifyAppRemote mSpotifyAppRemote;
     private ArrayList<TrackInfo> trackInfoArrayList = new ArrayList<>();
     RecyclerView recyclerView;
     SeekBar seekbar;
@@ -86,7 +86,6 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                 if (checkPlayerPaused()) {
                     pausePlay();
                     subscribeToPlayerState();
-                    b.setText("Play");
                     fullScreen.setVisibility(View.INVISIBLE);
                 } else if (b.getText().toString().equals("Stop")) {
                     pausePlay();
@@ -112,38 +111,6 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
             }
         });
 
-    }
-
-
-    public void setUpMediaPlayer(String url, final Button b) {
-        try {
-            player = new MediaPlayer();
-            player.setDataSource(url);
-            player.prepareAsync();
-            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                    b.setText("Stop");
-                }
-            });
-            player.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    mp.release();
-                    b.setText("Play");
-                    fullScreen.setVisibility(View.INVISIBLE);
-                }
-            });
-            fullScreen.setVisibility(View.VISIBLE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static MediaPlayer getPlayer() {
-        return player;
     }
 
 
@@ -179,58 +146,11 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
     }
 
     private void loadAll() {
-        TrackInfo track = new TrackInfo("Girls Like You", "Maroon 5", "https://fullgaana.in/siteuploads/files/sfd10/4966/Maroon%205%20-%20Girls%20Like%20You%20(feat.%20Cardi%20B)(FullGaana.In).mp3");
+        TrackInfo track = new TrackInfo("Polonaise in B-flat Minor, Op. 21", "Alexander Scriabin, Halida Dinova", "spotify:track:5UIV0Vy9Ui1IrK1jT5mMwl");
         trackInfoArrayList.add(track);
 
-        TrackInfo track2 = new TrackInfo("Faded", "Alan Walker", "https://fullgaana.in/siteuploads/files/sfd6/2895/Faded%20(Alan%20Walker)(FullGaana.In).mp3");
+        TrackInfo track2 = new TrackInfo("Piano Concerto No. 2 in C minor, Op. 18 No. 1", "Sergei Rachmaninov", "https://fullgaana.in/siteuploads/files/sfd6/2895/Faded%20(Alan%20Walker)(FullGaana.In).mp3");
         trackInfoArrayList.add(track2);
-    }
-
-    private void loadSpotify() {
-
-
-        AuthenticationRequest.Builder builder =
-                new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
-
-        builder.setScopes(new String[]{"streaming"});
-        AuthenticationRequest request = builder.build();
-
-        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
-
-        ConnectionParams connectionParams =
-                new ConnectionParams.Builder(CLIENT_ID)
-                        .setRedirectUri(REDIRECT_URI)
-                        .showAuthView(true)
-                        .build();
-        SpotifyAppRemote.connect(this, connectionParams,
-                new Connector.ConnectionListener() {
-                    @Override
-                    public void onConnected(SpotifyAppRemote spotifyAppRemote) {
-                        mSpotifyAppRemote = spotifyAppRemote;
-                        Toast.makeText(SearchResultsActivity.this, "Connected", Toast.LENGTH_SHORT);
-                        connected();
-                    }
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-
-                    }
-                });
-    }
-
-    private void connected() {
-        mSpotifyAppRemote.getPlayerApi()
-                .play("spotify:track:7lEptt4wbM0yJTvSG5EBof");
-
-        /*try {
-            TimeUnit.SECONDS.sleep(20);
-        } catch (Exception e) {
-
-        }*/
-
-        //player.pause();
-        //SpotifyAppRemote.disconnect(mSpotifyAppRemote);
-
     }
 
     private void connect(boolean showAuthView) {
@@ -259,7 +179,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     }
 
-    public void subscribeToPlayerState() {
+    protected void subscribeToPlayerState() {
 
         mSpotifyAppRemote.getPlayerApi()
                 .subscribeToPlayerState();
@@ -276,7 +196,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
                 .play(uri);
     }
 
-    private void pausePlay() {
+    protected void pausePlay() {
 
         if (checkPlayerPaused()) {
             mSpotifyAppRemote.getPlayerApi().resume();
@@ -286,7 +206,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
     }
 
-    private boolean checkPlayerPaused() {
+    protected boolean checkPlayerPaused() {
         CallResult<PlayerState> playerStateCall = mSpotifyAppRemote.getPlayerApi().getPlayerState();
         Result<PlayerState> playerStateResult = playerStateCall.await(10, TimeUnit.MICROSECONDS);
         if (playerStateResult.isSuccessful()) {

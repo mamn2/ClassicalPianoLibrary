@@ -18,6 +18,10 @@ public class TrackInfo {
         this.url = url;
     }
 
+    public TrackInfo(String uri) {
+
+    }
+
     public TrackInfo(String songName, String artistName, String url, ImageView coverArt) {
         this.songName = songName;
         this.artistName = artistName;
