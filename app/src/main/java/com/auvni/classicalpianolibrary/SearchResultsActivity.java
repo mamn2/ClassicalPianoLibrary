@@ -32,7 +32,6 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
     private ArrayList<TrackInfo> trackInfoArrayList = new ArrayList<>();
     private ArrayList<TrackInfo> newTrackInfoArrayList = new ArrayList<>();
     RecyclerView recyclerView;
-    SeekBar seekbar;
     Subscription<PlayerState> mPlayerStateSubscription;
     SongRecyclerListAdapter songRecyclerListAdapter;
     static MediaPlayer player;
@@ -50,8 +49,9 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
         }
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        seekbar = (SeekBar) findViewById(R.id.seekBar);
         fullScreen = (ImageButton) findViewById(R.id.fullScreenButton);
+        newTrackInfoArrayList = new ArrayList<>();
+        trackInfoArrayList = new ArrayList<>();
         trackInfoArrayList = LoadTracks.loadTracks();
         search(getSongName);
 
@@ -168,7 +168,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
 
                     @Override
                     public void onFailure(Throwable error) {
-                        Toast.makeText(SearchResultsActivity.this, "Not Connected", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SearchResultsActivity.this, "Not Connected", Toast.LENGTH_SHORT).show();
                         connect(true);
                     }
                 });

@@ -8,6 +8,7 @@ public class LoadTracks {
     public static Map<String, Integer> hashMap = new HashMap<>();
     public static ArrayList<TrackInfo> returnArrayList = new ArrayList<>();
     public static ArrayList<TrackInfo> loadTracks() {
+        returnArrayList = new ArrayList<>();
         TrackInfo track = new TrackInfo("Polonaise in B-flat Minor, Op. 21", "Alexander Scriabin, Halida Dinova", "spotify:track:5UIV0Vy9Ui1IrK1jT5mMwl");
         hashMap.put(track.getSongName(), R.drawable.scriabin_polonaise);
         returnArrayList.add(track);
