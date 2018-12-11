@@ -50,6 +50,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
     static MediaPlayer player;
     ImageButton fullScreen;
     String getSongName;
+    protected static TrackInfo trackInfoNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +85,7 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
             @Override
             public void onItemClick(final Button b, View v, TrackInfo inf, int pos) {
 
-
+                trackInfoNum = inf;
                 if (checkPlayerPaused()) {
                     pausePlay();
                     subscribeToPlayerState();
@@ -154,14 +155,6 @@ public class SearchResultsActivity extends AppCompatActivity implements SpotifyR
             setContentView(R.layout.no_songs);
         }
     }
-
-    /*private void loadAll() {
-        TrackInfo track = new TrackInfo("Polonaise in B-flat Minor, Op. 21", "Alexander Scriabin, Halida Dinova", "spotify:track:5UIV0Vy9Ui1IrK1jT5mMwl");
-        trackInfoArrayList.add(track);
-
-        TrackInfo track2 = new TrackInfo("Nocturne in E Flat Major", "Frederic Chopin", "spotify:track:7yMSBYlmVEZYZS6V1SLrth");
-        trackInfoArrayList.add(track2);
-    }*/
 
     protected CallResult<Bitmap> imageConnection(String URI) {
         connect(true);

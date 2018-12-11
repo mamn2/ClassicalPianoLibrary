@@ -1,6 +1,9 @@
 package com.auvni.classicalpianolibrary;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +50,11 @@ public class SongRecyclerListAdapter extends RecyclerView.Adapter<SongRecyclerLi
         final TrackInfo trackerInfo = trackInfoArrayList.get(i);
         trackHolder.songName.setText(trackerInfo.getSongName());
         trackHolder.artistName.setText(trackerInfo.getArtistName());
-        //trackHolder.coverArt.setImageBitmap(trackerInfo.getCoverArt());
+        try {
+            trackHolder.coverArt.setImageResource(LoadTracks.hashMap.get(trackerInfo.getSongName()));
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         trackHolder.mediaPlayerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

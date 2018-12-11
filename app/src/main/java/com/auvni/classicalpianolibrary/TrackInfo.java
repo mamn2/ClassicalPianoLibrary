@@ -14,7 +14,6 @@ public class TrackInfo extends SearchResultsActivity {
     private String songName;
     private String artistName;
     private String url;
-    private Bitmap coverArt;
 
     public TrackInfo() {
 
@@ -26,15 +25,10 @@ public class TrackInfo extends SearchResultsActivity {
         this.url = url;
     }
 
-    public TrackInfo(String uri) {
-
-    }
-
-    public TrackInfo(String songName, String artistName, String url, Bitmap coverArt) {
+    public TrackInfo(String songName, String artistName, String url, ImageView coverArt) {
         this.songName = songName;
         this.artistName = artistName;
         this.url = url;
-        this.coverArt = coverArt;
     }
 
     public String getSongName() {
@@ -49,13 +43,4 @@ public class TrackInfo extends SearchResultsActivity {
         return url;
     }
 
-    public Bitmap getCoverArt() {
-        CallResult<Bitmap> bitmap = imageConnection(url);
-        Result<Bitmap>  bitmapResult = bitmap.await(10, TimeUnit.SECONDS);
-        if (bitmapResult.isSuccessful()) {
-            coverArt = bitmapResult.getData();
-        }
-
-        return coverArt;
-    }
 }

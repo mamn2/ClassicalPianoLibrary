@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -19,7 +20,8 @@ public class AudioPlayerActivity extends SearchResultsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_audio_player);
-
+        ImageView imageView = (ImageView) findViewById(R.id.coverArtBig);
+        imageView.setImageResource(LoadTracks.hashMap.get(trackInfoNum.getSongName()));
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
