@@ -88,8 +88,6 @@ public class LoadTracks {
         hashMap.put(track20.getSongName(), R.drawable.preludecsharp);
         returnArrayList.add(track20);
 
-        //TrackInfo.getCoverArt();
-
         return returnArrayList;
     }
 }

@@ -12,10 +12,8 @@ import com.spotify.protocol.types.Track;
 
 public interface SpotifyRemoteCalls {
 
-    public static final String CLIENT_ID = "9ae5066bba254f168f61e7229a7a1e3a";
-    public static final String REDIRECT_URI = "http://localhost:8888/callback/";
-
-    public static final int REQUEST_CODE = 1337;
+    String CLIENT_ID = "9ae5066bba254f168f61e7229a7a1e3a";
+    String REDIRECT_URI = "http://localhost:8888/callback/";
 
 
 }
